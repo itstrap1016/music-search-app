@@ -1,0 +1,77 @@
+/* src/styles/reset.css */
+
+/* 모든 요소에 대한 margin, padding 초기화 */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 기본 글꼴 설정 */
+html,
+body {
+  font-family: sans-serif;
+  line-height: 1.5;
+}
+
+/* 전체 속성 */
+body * {
+  font-family: 'Noto Sans KR', sans-serif;
+  line-height: 1;
+  font-size: 16px;
+  color: #222;
+}
+
+/* 링크 스타일 초기화 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 리스트 스타일 초기화 */
+ul,
+ol {
+  list-style: none;
+}
+
+/* 버튼 스타일 초기화 */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* 폼 요소 스타일 초기화 */
+input,
+textarea,
+select {
+  outline: none;
+  border: 1px solid #ccc;
+}
+
+/* 테이블 기본 스타일 초기화 */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+
+/* 이미지 기본 스타일 초기화 */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 모든 요소에서 overflow-x 숨기기 (스크롤바 문제 해결) */
+html,
+body {
+  overflow-x: hidden;
+}
