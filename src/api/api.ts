@@ -16,9 +16,10 @@ export const fetchTracks = async (query: string) => {
     params: {
       method: 'track.search',
       track: query,
+      limit: 20,
     },
   });
-  console.log(response.data);
+  console.log('tracks', response.data);
   return response.data;
 };
 
@@ -27,8 +28,10 @@ export const fetchAlbums = async (query: string) => {
     params: {
       method: 'album.search',
       album: query,
+      limit: 20,
     },
   });
+  console.log('albums', response.data);
   return response.data;
 };
 
@@ -37,7 +40,9 @@ export const fetchArtists = async (query: string) => {
     params: {
       method: 'artist.search',
       artist: query,
+      limit: 20,
     },
   });
+  console.log('artists', response.data);
   return response.data;
 };
