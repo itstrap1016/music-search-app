@@ -19,14 +19,30 @@ const TextContainer = styled.div`
 const Title = styled.p`
   text-align: center;
   font-size: 20px;
-  line-heihgt: 1.25;
+  line-height: 1.25;
+  width: 100%;
+  overflow: hidden;
   color: ${(props) => props.theme.colors.black};
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 최대 줄 수 */
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  text-overflow: ellipsis;
+  max-height: 50px;
 `;
 const SubTitle = styled.p`
   text-align: center;
   font-size: 16px;
   margin-top: 10px;
+  line-height: 1.25;
+  width: 100%;
+  overflow: hidden;
   color: ${(props) => props.theme.colors.mediumGray};
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 최대 줄 수 */
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  text-overflow: ellipsis;
 `;
 
 const SearchResult = ({
@@ -42,9 +58,11 @@ const SearchResult = ({
 }) => {
   return (
     <StyledLink to={'#'}>
-      <Image imgurl={imgurl} />
+      <Image
+        imgurl={imgurl !== '' ? imgurl : 'https://via.placeholder.com/200'}
+      />
       <TextContainer>
-        <Title>{title}</Title>
+        <Title>{title !== '(null)' ? title : '제목 없음'}</Title>
         {type !== 'artists' ? <SubTitle>{subTitle}</SubTitle> : null}
       </TextContainer>
     </StyledLink>
