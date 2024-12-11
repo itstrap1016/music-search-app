@@ -4,6 +4,7 @@ import { fetchTracks, fetchAlbums, fetchArtists } from '../api/api';
 import { useQuery } from '@tanstack/react-query';
 import SearchResult from '../components/SearchResult';
 import Loading from '../components/Loading';
+import NoSearchResult from '../components/noSearchResult';
 
 const SearchSection = styled.div`
   padding-top: 50px;
@@ -30,23 +31,24 @@ const SearchBtn = styled.button`
   font-weight: 500;
 `;
 const SearchResultsSection = styled.div`
+  margin: 0 auto;
+  margin-top: 60px;
+  margin-bottom: 60px;
+  width: 1240px;
+`;
+const SearchResults = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 40px;
   margin: 0 auto;
-  margin-top: 60px;
-  width: 1240px;
-`;
-const Test = styled.div`
-  width: 200px;
-  height: 200px;
-  background-color: gray;
+  width: 100%;
 `;
 
 const Home = () => {
   const [searchOption, setSearchOption] = useState('tracks');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentData, setCurrentData] = useState('');
+  const [noResult, setNoResult] = useState(false);
   const {
     data: tracksData,
     isLoading: tracksLoading,
@@ -54,7 +56,9 @@ const Home = () => {
     refetch: refetchTracks,
   } = useQuery({
     queryKey: ['searchTracks'],
-    queryFn: () => fetchTracks(searchQuery),
+    queryFn: () => {
+      return fetchTracks(searchQuery);
+    },
     enabled: false,
   });
   const {
@@ -93,15 +97,33 @@ const Home = () => {
       return;
     }
     if (searchOption === 'tracks') {
-      refetchTracks();
+      refetchTracks().then((json) => {
+        if (json.data.results.trackmatches.track.length === 0) {
+          setNoResult(true);
+        } else {
+          setNoResult(false);
+        }
+      });
       setCurrentData('tracks');
     }
     if (searchOption === 'albums') {
-      refetchAlbums();
+      refetchAlbums().then((json) => {
+        if (json.data.results.albummatches.album.length === 0) {
+          setNoResult(true);
+        } else {
+          setNoResult(false);
+        }
+      });
       setCurrentData('albums');
     }
     if (searchOption === 'artists') {
-      refetchArtists();
+      refetchArtists().then((json) => {
+        if (json.data.results.artistmatches.artist.length === 0) {
+          setNoResult(true);
+        } else {
+          setNoResult(false);
+        }
+      });
       setCurrentData('artists');
     }
   };
@@ -129,45 +151,60 @@ const Home = () => {
       </SearchSection>
       {(tracksLoading || albumsLoading || artistsLoading) && <Loading />}
       <SearchResultsSection>
-        {currentData === 'tracks' &&
-          tracksData &&
-          tracksData.results?.trackmatches?.track?.map(
-            (track: any, index: number) => (
-              <SearchResult
-                key={index}
-                type="tracks"
-                imgurl={track.image[3]['#text']}
-                title={track.name}
-                subTitle={track.artist}
-              />
-            ),
-          )}
-        {currentData === 'albums' &&
-          albumsData &&
-          albumsData.results?.albummatches?.album?.map(
-            (album: any, index: number) => (
-              <SearchResult
-                key={index}
-                type="albums"
-                imgurl={album.image[3]['#text']}
-                title={album.name}
-                subTitle={album.artist}
-              />
-            ),
-          )}
-        {currentData === 'artists' &&
-          artistsData &&
-          artistsData.results?.artistmatches?.artist?.map(
-            (artist: any, index: number) => (
-              <SearchResult
-                key={index}
-                type="artists"
-                imgurl={artist.image[3]['#text']}
-                title={artist.name}
-                subTitle={''}
-              />
-            ),
-          )}
+        {!noResult
+          ? currentData === 'tracks' &&
+            tracksData && (
+              <SearchResults>
+                {tracksData.results.trackmatches.track.map(
+                  (track: any, index: number) => (
+                    <SearchResult
+                      key={index}
+                      type="tracks"
+                      imgurl={track.image[3]['#text']}
+                      title={track.name}
+                      subTitle={track.artist}
+                    />
+                  ),
+                )}
+              </SearchResults>
+            )
+          : currentData === 'tracks' && <NoSearchResult />}
+        {!noResult
+          ? currentData === 'albums' &&
+            albumsData && (
+              <SearchResults>
+                {albumsData.results.albummatches.album.map(
+                  (album: any, index: number) => (
+                    <SearchResult
+                      key={index}
+                      type="albums"
+                      imgurl={album.image[3]['#text']}
+                      title={album.name}
+                      subTitle={album.artist}
+                    />
+                  ),
+                )}
+              </SearchResults>
+            )
+          : currentData === 'albums' && <NoSearchResult />}
+        {!noResult
+          ? currentData === 'artists' &&
+            artistsData && (
+              <SearchResults>
+                {artistsData.results?.artistmatches?.artist?.map(
+                  (artist: any, index: number) => (
+                    <SearchResult
+                      key={index}
+                      type="artists"
+                      imgurl={artist.image[3]['#text']}
+                      title={artist.name}
+                      subTitle={''}
+                    />
+                  ),
+                )}
+              </SearchResults>
+            )
+          : currentData === 'artists' && <NoSearchResult />}
       </SearchResultsSection>
     </>
   );
