@@ -1,0 +1,38 @@
+ul[role='navigation'] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  gap: 10px;
+}
+ul[role='navigation'] li {
+  border: 1px solid #dcdcdc;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+ul[role='navigation'] li a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+ul[role='navigation'] li.selected {
+  border: none;
+  background-color: #3498db;
+  color: #fff;
+  font-weight: 500;
+}
+ul[role='navigation'] li.break {
+  border: none;
+}
+ul[role='navigation'] li.previous,
+ul[role='navigation'] li.next {
+}
+ul[role='navigation'] li.previous.disabled a,
+ul[role='navigation'] li.next.disabled a {
+  cursor: initial;
+}

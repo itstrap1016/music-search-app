@@ -16,7 +16,7 @@ export const fetchTracks = async (query: string) => {
     params: {
       method: 'track.search',
       track: query,
-      limit: 20,
+      limit: 1000,
     },
   });
   console.log('tracks', response.data);

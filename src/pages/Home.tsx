@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { fetchTracks, fetchAlbums, fetchArtists } from '../api/api';
 import { useQuery } from '@tanstack/react-query';
 import SearchResult from '../components/SearchResult';
 import Loading from '../components/Loading';
 import NoSearchResult from '../components/noSearchResult';
+import ReactPaginate from 'react-paginate';
 
 const SearchSection = styled.div`
   padding-top: 50px;
@@ -32,7 +33,7 @@ const SearchBtn = styled.button`
 `;
 const SearchResultsSection = styled.div`
   margin: 0 auto;
-  margin-top: 60px;
+  margin-top: 80px;
   margin-bottom: 60px;
   width: 1240px;
 `;
@@ -49,6 +50,9 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentData, setCurrentData] = useState('');
   const [noResult, setNoResult] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = useRef(20);
   const {
     data: tracksData,
     isLoading: tracksLoading,
@@ -102,6 +106,12 @@ const Home = () => {
           setNoResult(true);
         } else {
           setNoResult(false);
+          setPageCount(
+            Math.ceil(
+              json.data.results.trackmatches.track.length /
+                itemsPerPage.current,
+            ),
+          );
         }
       });
       setCurrentData('tracks');
@@ -112,6 +122,12 @@ const Home = () => {
           setNoResult(true);
         } else {
           setNoResult(false);
+          setPageCount(
+            Math.ceil(
+              json.data.results.albummatches.album.length /
+                itemsPerPage.current,
+            ),
+          );
         }
       });
       setCurrentData('albums');
@@ -122,6 +138,12 @@ const Home = () => {
           setNoResult(true);
         } else {
           setNoResult(false);
+          setPageCount(
+            Math.ceil(
+              json.data.results.artistmatches.artist.length /
+                itemsPerPage.current,
+            ),
+          );
         }
       });
       setCurrentData('artists');
@@ -131,6 +153,14 @@ const Home = () => {
     if (e.key === 'Enter') {
       handleSearch();
     }
+  };
+  const handlePageChange = (selectedPage: { selected: number }) => {
+    setCurrentPage(selectedPage.selected);
+  };
+  const getCurrentPageData = (data: any[]) => {
+    const startIndex = currentPage * itemsPerPage.current;
+    const endIndex = startIndex + itemsPerPage.current;
+    return data.slice(startIndex, endIndex);
   };
 
   return (
@@ -154,9 +184,11 @@ const Home = () => {
         {!noResult
           ? currentData === 'tracks' &&
             tracksData && (
-              <SearchResults>
-                {tracksData.results.trackmatches.track.map(
-                  (track: any, index: number) => (
+              <>
+                <SearchResults>
+                  {getCurrentPageData(
+                    tracksData.results.trackmatches.track,
+                  ).map((track: any, index: number) => (
                     <SearchResult
                       key={index}
                       type="tracks"
@@ -164,45 +196,73 @@ const Home = () => {
                       title={track.name}
                       subTitle={track.artist}
                     />
-                  ),
-                )}
-              </SearchResults>
+                  ))}
+                </SearchResults>
+                <ReactPaginate
+                  pageCount={pageCount} // 총 페이지 수
+                  pageRangeDisplayed={5} // 표시할 페이지 수
+                  marginPagesDisplayed={2} // 양옆에 표시할 페이지 수
+                  onPageChange={handlePageChange}
+                  previousLabel=""
+                  nextLabel=""
+                />
+              </>
             )
           : currentData === 'tracks' && <NoSearchResult />}
         {!noResult
           ? currentData === 'albums' &&
             albumsData && (
-              <SearchResults>
-                {albumsData.results.albummatches.album.map(
-                  (album: any, index: number) => (
-                    <SearchResult
-                      key={index}
-                      type="albums"
-                      imgurl={album.image[3]['#text']}
-                      title={album.name}
-                      subTitle={album.artist}
-                    />
-                  ),
-                )}
-              </SearchResults>
+              <>
+                <SearchResults>
+                  {albumsData.results.albummatches.album.map(
+                    (album: any, index: number) => (
+                      <SearchResult
+                        key={index}
+                        type="albums"
+                        imgurl={album.image[3]['#text']}
+                        title={album.name}
+                        subTitle={album.artist}
+                      />
+                    ),
+                  )}
+                </SearchResults>
+                <ReactPaginate
+                  pageCount={pageCount} // 총 페이지 수
+                  pageRangeDisplayed={10} // 표시할 페이지 수
+                  marginPagesDisplayed={2} // 양옆에 표시할 페이지 수
+                  onPageChange={handlePageChange}
+                  containerClassName="pagination"
+                  activeClassName="active"
+                />
+              </>
             )
           : currentData === 'albums' && <NoSearchResult />}
         {!noResult
           ? currentData === 'artists' &&
             artistsData && (
-              <SearchResults>
-                {artistsData.results?.artistmatches?.artist?.map(
-                  (artist: any, index: number) => (
-                    <SearchResult
-                      key={index}
-                      type="artists"
-                      imgurl={artist.image[3]['#text']}
-                      title={artist.name}
-                      subTitle={''}
-                    />
-                  ),
-                )}
-              </SearchResults>
+              <>
+                <SearchResults>
+                  {artistsData.results?.artistmatches?.artist?.map(
+                    (artist: any, index: number) => (
+                      <SearchResult
+                        key={index}
+                        type="artists"
+                        imgurl={artist.image[3]['#text']}
+                        title={artist.name}
+                        subTitle={''}
+                      />
+                    ),
+                  )}
+                </SearchResults>
+                <ReactPaginate
+                  pageCount={pageCount} // 총 페이지 수
+                  pageRangeDisplayed={10} // 표시할 페이지 수
+                  marginPagesDisplayed={2} // 양옆에 표시할 페이지 수
+                  onPageChange={handlePageChange}
+                  containerClassName="pagination"
+                  activeClassName="active"
+                />
+              </>
             )
           : currentData === 'artists' && <NoSearchResult />}
       </SearchResultsSection>

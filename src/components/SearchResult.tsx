@@ -28,7 +28,8 @@ const Title = styled.p`
   -webkit-box-orient: vertical;
   white-space: normal;
   text-overflow: ellipsis;
-  max-height: 50px;
+  height: 50px;
+  word-wrap: break-word;
 `;
 const SubTitle = styled.p`
   text-align: center;
@@ -43,6 +44,7 @@ const SubTitle = styled.p`
   -webkit-box-orient: vertical;
   white-space: normal;
   text-overflow: ellipsis;
+  word-wrap: break-word;
 `;
 
 const SearchResult = ({
