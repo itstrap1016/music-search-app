@@ -29,9 +29,6 @@ ul[role='navigation'] li.selected {
 ul[role='navigation'] li.break {
   border: none;
 }
-ul[role='navigation'] li.previous,
-ul[role='navigation'] li.next {
-}
 ul[role='navigation'] li.previous.disabled a,
 ul[role='navigation'] li.next.disabled a {
   cursor: initial;

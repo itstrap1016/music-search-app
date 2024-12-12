@@ -46,3 +46,15 @@ export const fetchArtists = async (query: string) => {
   console.log('artists', response.data);
   return response.data;
 };
+
+export const getTrackInfo = async (track: string, artist: string) => {
+  const response = await axiosInstance.get('', {
+    params: {
+      method: 'track.getInfo',
+      track,
+      artist,
+    },
+  });
+  console.log('track.getInfo', response.data);
+  return response.data;
+};

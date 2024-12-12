@@ -28,7 +28,7 @@ const Title = styled.p`
   -webkit-box-orient: vertical;
   white-space: normal;
   text-overflow: ellipsis;
-  height: 50px;
+  height: 51px;
   word-wrap: break-word;
 `;
 const SubTitle = styled.p`
@@ -45,6 +45,7 @@ const SubTitle = styled.p`
   white-space: normal;
   text-overflow: ellipsis;
   word-wrap: break-word;
+  height: 21px;
 `;
 
 const SearchResult = ({
@@ -59,7 +60,19 @@ const SearchResult = ({
   subTitle?: string;
 }) => {
   return (
-    <StyledLink to={'#'}>
+    <StyledLink
+      to={
+        type === 'tracks'
+          ? `/tracks?type=tracks&track=${encodeURIComponent(
+              title,
+            )}&artist=${encodeURIComponent(subTitle || '')}`
+          : type === 'albums'
+          ? `/albums?type=albums&album=${encodeURIComponent(
+              title,
+            )}&artist=${encodeURIComponent(subTitle || '')}`
+          : `/artists?type=artists&artist=${encodeURIComponent(title)}`
+      }
+    >
       <Image
         imgurl={imgurl !== '' ? imgurl : 'https://via.placeholder.com/200'}
       />

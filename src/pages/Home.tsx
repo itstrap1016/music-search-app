@@ -4,8 +4,9 @@ import { fetchTracks, fetchAlbums, fetchArtists } from '../api/api';
 import { useQuery } from '@tanstack/react-query';
 import SearchResult from '../components/SearchResult';
 import Loading from '../components/Loading';
-import NoSearchResult from '../components/noSearchResult';
+import NoSearchResult from '../components/NoSearchResult';
 import ReactPaginate from 'react-paginate';
+import { Outlet } from 'react-router-dom';
 
 const SearchSection = styled.div`
   padding-top: 50px;
@@ -33,9 +34,9 @@ const SearchBtn = styled.button`
 `;
 const SearchResultsSection = styled.div`
   margin: 0 auto;
-  margin-top: 80px;
+  margin-top: 60px;
   margin-bottom: 60px;
-  width: 1240px;
+  width: 1160px;
 `;
 const SearchResults = styled.div`
   display: grid;
@@ -100,6 +101,7 @@ const Home = () => {
       alert('검색어를 입력하세요!');
       return;
     }
+    setCurrentPage(0);
     if (searchOption === 'tracks') {
       refetchTracks().then((json) => {
         if (json.data.results.trackmatches.track.length === 0) {
@@ -155,6 +157,7 @@ const Home = () => {
     }
   };
   const handlePageChange = (selectedPage: { selected: number }) => {
+    console.log(selectedPage.selected);
     setCurrentPage(selectedPage.selected);
   };
   const getCurrentPageData = (data: any[]) => {
@@ -203,8 +206,9 @@ const Home = () => {
                   pageRangeDisplayed={5} // 표시할 페이지 수
                   marginPagesDisplayed={2} // 양옆에 표시할 페이지 수
                   onPageChange={handlePageChange}
-                  previousLabel=""
-                  nextLabel=""
+                  previousLabel={<span>&lt;</span>}
+                  nextLabel={<span>&gt;</span>}
+                  forcePage={currentPage}
                 />
               </>
             )
@@ -228,11 +232,12 @@ const Home = () => {
                 </SearchResults>
                 <ReactPaginate
                   pageCount={pageCount} // 총 페이지 수
-                  pageRangeDisplayed={10} // 표시할 페이지 수
+                  pageRangeDisplayed={5} // 표시할 페이지 수
                   marginPagesDisplayed={2} // 양옆에 표시할 페이지 수
                   onPageChange={handlePageChange}
-                  containerClassName="pagination"
-                  activeClassName="active"
+                  previousLabel={<span>&lt;</span>}
+                  nextLabel={<span>&gt;</span>}
+                  forcePage={currentPage}
                 />
               </>
             )
@@ -256,16 +261,18 @@ const Home = () => {
                 </SearchResults>
                 <ReactPaginate
                   pageCount={pageCount} // 총 페이지 수
-                  pageRangeDisplayed={10} // 표시할 페이지 수
+                  pageRangeDisplayed={5} // 표시할 페이지 수
                   marginPagesDisplayed={2} // 양옆에 표시할 페이지 수
                   onPageChange={handlePageChange}
-                  containerClassName="pagination"
-                  activeClassName="active"
+                  previousLabel={<span>&lt;</span>}
+                  nextLabel={<span>&gt;</span>}
+                  forcePage={currentPage}
                 />
               </>
             )
           : currentData === 'artists' && <NoSearchResult />}
       </SearchResultsSection>
+      <Outlet />
     </>
   );
 };

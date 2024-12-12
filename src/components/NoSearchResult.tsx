@@ -5,7 +5,6 @@ const Box = styled.div`
   width: 100%;
   text-align: center;
   font-weight: 500;
-  position: absolute;
 `;
 
 const NoSearchResult = () => {
