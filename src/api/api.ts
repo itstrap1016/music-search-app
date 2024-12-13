@@ -58,3 +58,26 @@ export const getTrackInfo = async (track: string, artist: string) => {
   console.log('track.getInfo', response.data);
   return response.data;
 };
+
+export const getAlbumInfo = async (album: string, artist: string) => {
+  const response = await axiosInstance.get('', {
+    params: {
+      method: 'album.getinfo',
+      album,
+      artist,
+    },
+  });
+  console.log('album.getInfo', response.data);
+  return response.data;
+};
+
+export const getArtistInfo = async (artist: string) => {
+  const response = await axiosInstance.get('', {
+    params: {
+      method: 'artist.getinfo',
+      artist,
+    },
+  });
+  console.log('artist.getInfo', response.data);
+  return response.data;
+};
