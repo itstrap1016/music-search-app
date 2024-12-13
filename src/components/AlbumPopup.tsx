@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getAlbumInfo } from '../api/api';
@@ -31,10 +31,22 @@ const AlbumPopup = () => {
     queryKey: ['getAlbumInfo'],
     queryFn: () => getAlbumInfo(album || '', artist || ''),
   });
+  const tracksRef = useRef<HTMLUListElement>(null);
 
   const backClick = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    console.log(tracksRef.current?.offsetHeight);
+    if (tracksRef.current) {
+      if (tracksRef.current.offsetHeight >= 600) {
+        tracksRef.current.classList.add('overflow');
+      } else {
+        tracksRef.current.classList.remove('overflow');
+      }
+    }
+  }, [albumInfo]);
 
   return (
     <PopupOverlay onClick={backClick}>
@@ -83,7 +95,7 @@ const AlbumPopup = () => {
           <TextContainer>
             {albumInfo?.album?.tracks?.track &&
             Array.isArray(albumInfo.album.tracks.track) ? (
-              <Tracks>
+              <Tracks ref={tracksRef}>
                 {albumInfo?.album?.tracks?.track.map(
                   (track: any, index: number) => (
                     <Track key={index}>
@@ -93,7 +105,7 @@ const AlbumPopup = () => {
                 )}
               </Tracks>
             ) : (
-              <Tracks>
+              <Tracks ref={tracksRef}>
                 <Track>1. {albumInfo.album.tracks.track.name}</Track>
               </Tracks>
             )}

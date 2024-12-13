@@ -86,7 +86,10 @@ export const CloseBtn = styled.button`
 export const Tracks = styled.ul`
   margin-bottom: 10px;
   max-height: 600px;
-  overflow-y: scroll;
+
+  &.overflow {
+    overflow-y: scroll;
+  }
 `;
 export const Track = styled.li`
   &:first-child {
