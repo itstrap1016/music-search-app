@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getAlbumInfo } from '../api/api';
+import { getFetchVideo, getAlbumInfo } from '../api/api';
 import {
   PopupOverlay,
   PopupArea,
@@ -18,7 +18,11 @@ import {
   CloseBtn,
   Tracks,
   Track,
+  PlayBtn,
+  PlayIcon,
+  YoutubeVideo,
 } from './Popupstyled';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
 
 const AlbumPopup = () => {
   const location = useLocation();
@@ -27,18 +31,28 @@ const AlbumPopup = () => {
   const type = queryParams.get('type');
   const album = queryParams.get('album');
   const artist = queryParams.get('artist');
+  const [playYoutube, setPlayYoutube] = useState(false);
   const { data: albumInfo } = useQuery({
     queryKey: ['getAlbumInfo'],
     queryFn: () => getAlbumInfo(album || '', artist || ''),
   });
+  const { data: youtubeData } = useQuery({
+    queryKey: ['getVideoInfo'],
+    queryFn: () => getFetchVideo(`${artist} ${album} full album`),
+    enabled: playYoutube,
+  });
   const tracksRef = useRef<HTMLUListElement>(null);
 
   const backClick = () => {
-    navigate(-1);
+    navigate('/');
+    setPlayYoutube(false);
+  };
+
+  const onYoutubeClick = () => {
+    setPlayYoutube(true);
   };
 
   useEffect(() => {
-    console.log(tracksRef.current?.offsetHeight);
     if (tracksRef.current) {
       if (tracksRef.current.offsetHeight >= 600) {
         tracksRef.current.classList.add('overflow');
@@ -89,6 +103,17 @@ const AlbumPopup = () => {
               </MoreInfo>
             )}
           </TitleContainer>
+          <PlayBtn onClick={onYoutubeClick}>
+            <PlayIcon icon={faPlay} />
+          </PlayBtn>
+          {playYoutube && (
+            <YoutubeVideo
+              src={`https://www.youtube.com/embed/${youtubeData?.items[0]?.id?.videoId}?autoplay=1`}
+              title={youtubeData?.items[0]?.snippet?.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          )}
         </ImgContainer>
         {(albumInfo?.album?.tracks?.track ||
           albumInfo?.album?.wiki?.content) && (

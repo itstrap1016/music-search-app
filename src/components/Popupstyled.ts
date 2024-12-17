@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
 
 export const PopupOverlay = styled.div`
   width: 100vw;
@@ -23,6 +25,7 @@ export const PopupArea = styled.div`
 `;
 export const ImgContainer = styled.div`
   width: 200px;
+  position: relative;
 `;
 export const Img = styled.img`
   width: 100%;
@@ -99,4 +102,30 @@ export const Track = styled.li`
   padding-top: 8px;
   padding-bottom: 8px;
   border-bottom: 1px solid ${(props) => props.theme.colors.lightGray};
+`;
+export const PlayBtn = styled.button`
+  width: 40px;
+  height: 40px;
+  background-color: ${(props) => props.theme.colors.primaryColor};
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+export const PlayIcon = styled(FontAwesomeIcon)`
+  * {
+    color: white !important;
+  }
+`;
+export const YoutubeVideo = styled.iframe`
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: none;
 `;
