@@ -32,13 +32,14 @@ const AlbumPopup = () => {
   const album = queryParams.get('album');
   const artist = queryParams.get('artist');
   const [playYoutube, setPlayYoutube] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { data: albumInfo } = useQuery({
     queryKey: ['getAlbumInfo'],
     queryFn: () => getAlbumInfo(album || '', artist || ''),
   });
   const { data: youtubeData } = useQuery({
     queryKey: ['getVideoInfo'],
-    queryFn: () => getFetchVideo(`${artist} ${album} full album`),
+    queryFn: () => getFetchVideo(searchQuery),
     enabled: playYoutube,
   });
   const tracksRef = useRef<HTMLUListElement>(null);
@@ -59,6 +60,11 @@ const AlbumPopup = () => {
       } else {
         tracksRef.current.classList.remove('overflow');
       }
+    }
+    if (Array.isArray(albumInfo?.album?.tracks?.track)) {
+      setSearchQuery(`${artist} ${album} full album`);
+    } else {
+      setSearchQuery(`${artist} ${album}`);
     }
   }, [albumInfo]);
 
