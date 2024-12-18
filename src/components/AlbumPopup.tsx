@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getFetchVideo, getAlbumInfo } from '../api/api';
+import { getFetchVideo, getAlbumInfo } from '../server/server';
 import {
   PopupOverlay,
   PopupArea,
@@ -114,7 +114,7 @@ const AlbumPopup = () => {
           </PlayBtn>
           {playYoutube && (
             <YoutubeVideo
-              src={`https://www.youtube.com/embed/${youtubeData?.items[0]?.id?.videoId}?autoplay=1`}
+              src={`https://www.youtube-nocookie.com/embed/${youtubeData?.items[0]?.id?.videoId}?autoplay=1`}
               title={youtubeData?.items[0]?.snippet?.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -124,22 +124,23 @@ const AlbumPopup = () => {
         {(albumInfo?.album?.tracks?.track ||
           albumInfo?.album?.wiki?.content) && (
           <TextContainer>
-            {albumInfo?.album?.tracks?.track &&
-            Array.isArray(albumInfo.album.tracks.track) ? (
-              <Tracks ref={tracksRef}>
-                {albumInfo?.album?.tracks?.track.map(
-                  (track: any, index: number) => (
-                    <Track key={index}>
-                      {index + 1}. {track.name}
-                    </Track>
-                  ),
-                )}
-              </Tracks>
-            ) : (
-              <Tracks ref={tracksRef}>
-                <Track>1. {albumInfo.album.tracks.track.name}</Track>
-              </Tracks>
-            )}
+            {albumInfo?.album?.tracks?.track ? (
+              Array.isArray(albumInfo.album.tracks.track) ? (
+                <Tracks ref={tracksRef}>
+                  {albumInfo?.album?.tracks?.track.map(
+                    (track: any, index: number) => (
+                      <Track key={index}>
+                        {index + 1}. {track.name}
+                      </Track>
+                    ),
+                  )}
+                </Tracks>
+              ) : (
+                <Tracks ref={tracksRef}>
+                  <Track>1. {albumInfo.album.tracks.track.name}</Track>
+                </Tracks>
+              )
+            ) : null}
             {albumInfo?.album?.wiki?.content && (
               <Summary>
                 {albumInfo.album.wiki.content.length > 300

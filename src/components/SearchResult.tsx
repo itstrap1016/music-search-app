@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { StyleSheetManager } from 'styled-components';
+import isPropValid from '@emotion/is-prop-valid';
 
 const StyledLink = styled(Link)`
   width: 200px;
   display: inline-block;
   vertical-align: top;
 `;
-const Image = styled.div<{ imgurl: string }>`
+const Image = styled.div.withConfig({
+  shouldForwardProp: (prop) => isPropValid(prop),
+})<{ imgurl: string }>`
   width: 100%;
   height: 200px;
   background-image: url(${(props) => props.imgurl});

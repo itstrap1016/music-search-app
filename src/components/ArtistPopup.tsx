@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getArtistInfo } from '../api/api';
+import { getArtistInfo } from '../server/server';
 import {
   PopupOverlay,
   PopupArea,

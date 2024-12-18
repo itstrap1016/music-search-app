@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { fetchTracks, fetchAlbums, fetchArtists } from '../api/api';
+import { fetchTracks, fetchAlbums, fetchArtists } from '../server/server';
 import { useQuery } from '@tanstack/react-query';
 import SearchResult from '../components/SearchResult';
 import Loading from '../components/Loading';
@@ -51,7 +51,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentData, setCurrentData] = useState('');
   const [noResult, setNoResult] = useState(false);
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = useRef(20);
   const {
@@ -182,7 +182,7 @@ const Home = () => {
         </SearchSelect>
         <SearchBtn onClick={handleSearch}>검색</SearchBtn>
       </SearchSection>
-      {(tracksLoading || albumsLoading || artistsLoading) && <Loading />}
+      {tracksLoading || albumsLoading || artistsLoading ? <Loading /> : null}
       <SearchResultsSection>
         {!noResult
           ? currentData === 'tracks' &&

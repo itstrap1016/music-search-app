@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getFetchVideo, getTrackInfo } from '../api/api';
+import { getFetchVideo, getTrackInfo } from '../server/server';
 import {
   PopupOverlay,
   PopupArea,
@@ -100,7 +100,7 @@ const TrackPopup = () => {
           </PlayBtn>
           {playYoutube && (
             <YoutubeVideo
-              src={`https://www.youtube.com/embed/${youtubeData?.items[0]?.id?.videoId}?autoplay=1`}
+              src={`https://www.youtube-nocookie.com/embed/${youtubeData?.items[0]?.id?.videoId}?autoplay=1`}
               title={youtubeData?.items[0]?.snippet?.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
